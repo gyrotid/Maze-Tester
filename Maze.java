@@ -1,10 +1,12 @@
-import jave.nio.file.*;
+import java.nio.file.*;
 import java.io.*;
 
 public class Maze
 {
     char[][] aMaze = new char[20][20]; 
     boolean solveable = false;
+    int startRow, startCol;
+    int endRow, endCol;
     
     public Maze()
     {
@@ -13,20 +15,76 @@ public class Maze
         {
             BufferedReader reader = new BufferedReader(new FileReader("/workspaces/Maze-Tester/maze.dat"));
             String s = null;
-            int currentRow = 0;
+            int currentRow = 0, currentCol = 0;
             while ((s = reader.readLine()) != null)
             {
-                for (int i = 0; i < aMaze.length; i++)
+                for (int i = 0; i < aMaze[currentRow].length; i++)
                 {
-                    
+                    currentCol = i;
+                    aMaze[currentRow][currentCol] = s.charAt(currentCol);
+                    if (aMaze[currentRow][currentCol].isLetter('S'))
+                    {
+                        startRow = currentRow;
+                        startCol = currentCol; //this way we can call aMaze[startRow][startCol] when we track if it's solvable
+                    }
+                    else if (aMaze[currentRow][currentCol].isLetter('E'))
+                    {
+                        endRow = currentRow;
+                        endCol = currentCol; //same thing as the startRow/startCol call but with the end!
+                    }
                 }
                 currentRow++;
             }
             reader.close();
+
+
         }
-        catch (IOexception e)
+        catch (IOException e)
         {
             System.out.println(e);
+        }
+
+        boolean[][] visited = new boolean[20][20]; //type[][] variableName = new type[row size][collum size]
+        visited[startRow][startCol] = true;
+
+        for (currentRow = 0; currentRow < 20; currentRow++)
+        {
+            for (currentCol = 0; currentCol < 20; currentCol++)
+            {
+                if (visited[currentRow][currentCol])
+                {
+                    if (currentRow > 0 && aMaze[currentRow - 1][currentCol] != '#' && !visited[currentRow - 1][currentCol])
+                    {
+                        visited[currentRow - 1][currentCol] = true;
+                    }
+                }
+                if (visited[currentRow][currentCol])
+                {
+                    if (currentRow < 19 && aMaze[currentRow + 1][currentCol] != '#' && !visited[currentRow + 1][currentCol])
+                    {
+                        visited[currentRow + 1][currentCol] = true;
+                    }
+                }
+                if (visited[currentRow][currentCol])
+                {
+                    if (currentCol > 0 && aMaze[currentRow][currentCol - 1] != '#' && !visited[currentRow][currentCol - 1])
+                    {
+                        visited[currentRow][currentCol - 1] = true;
+                    }
+                }
+                if (visited[currentRow][currentCol])
+                {
+                    if (currentCol < 19 && aMaze[currentRow][currentCol + 1] != '#' && !visited[currentRow][currentCol + 1])
+                    {
+                        visited[currentRow][currentCol + 1] = true;
+                    }
+                }
+            }
+        }
+
+        if (visited[endRow][endCol])
+        {
+            solvable = true;
         }
     }
 
@@ -36,21 +94,13 @@ public class Maze
         if (solveable == true)
             return("Maze: YES");
         else
-            return("Maze: NO")
+            return("Maze: NO");
     }
 
     public static void main(String[] args)
     {
-        //this function calls the maze object (Maze newMaze) that i decalared globally
+        //this function calls the maze object (Maze newMaze) that i decalared globally & prints the toString
         Maze newMaze = new Maze();
-
+        System.out.println(newMaze.toString());
     }
 }
-
-/* 
-Need to treat each line of the file as a sequence of characters
-Each character in the that line belongs in one column of the same row
-I need to index the characters of the line directly
-Then fill the row and column into variables
-Afterwards move on to the next row
-*/
