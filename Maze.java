@@ -7,7 +7,8 @@ public class Maze
     boolean solveable = false;
     int startRow, startCol;
     int endRow, endCol;
-    
+    int currentRow, currentCol;
+
     public Maze()
     {
         //the constructor for the Maze class
@@ -15,19 +16,20 @@ public class Maze
         {
             BufferedReader reader = new BufferedReader(new FileReader("/workspaces/Maze-Tester/maze.dat"));
             String s = null;
-            int currentRow = 0, currentCol = 0;
+            currentRow = 0;
+            currentCol = 0;
             while ((s = reader.readLine()) != null)
             {
                 for (int i = 0; i < aMaze[currentRow].length; i++)
                 {
                     currentCol = i;
                     aMaze[currentRow][currentCol] = s.charAt(currentCol);
-                    if (aMaze[currentRow][currentCol].isLetter('S'))
+                    if (aMaze[currentRow][currentCol] == 'S')
                     {
                         startRow = currentRow;
-                        startCol = currentCol; //this way we can call aMaze[startRow][startCol] when we track if it's solvable
+                        startCol = currentCol; //this way we can call aMaze[startRow][startCol] when we track if it's solveable
                     }
-                    else if (aMaze[currentRow][currentCol].isLetter('E'))
+                    else if (aMaze[currentRow][currentCol] == 'E')
                     {
                         endRow = currentRow;
                         endCol = currentCol; //same thing as the startRow/startCol call but with the end!
@@ -44,7 +46,7 @@ public class Maze
             System.out.println(e);
         }
 
-        boolean[][] visited = new boolean[20][20]; //type[][] variableName = new type[row size][collum size]
+        boolean[][] visited = new boolean[20][20]; //type[][] variableName = new type[row size][collumn size]
         visited[startRow][startCol] = true;
 
         for (currentRow = 0; currentRow < 20; currentRow++)
@@ -84,7 +86,7 @@ public class Maze
 
         if (visited[endRow][endCol])
         {
-            solvable = true;
+            solveable = true;
         }
     }
 
