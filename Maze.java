@@ -18,9 +18,9 @@ public class Maze
             String s = null;
             currentRow = 0;
             currentCol = 0;
-            while ((s = reader.readLine()) != null)
+            while ((s = reader.readLine()) != null && currentRow < 20)
             {
-                for (int i = 0; i < aMaze[currentRow].length; i++)
+                for (int i = 0; i < 20 && i < s.length(); i++)
                 {
                     currentCol = i;
                     aMaze[currentRow][currentCol] = s.charAt(currentCol);
@@ -46,7 +46,7 @@ public class Maze
             System.out.println(e);
         }
 
-        boolean[][] visited = new boolean[20][20]; //type[][] variableName = new type[row size][collumn size]
+        boolean[][] visited = new boolean[20][20]; //type[][] variableName = new type[row size][column size]
         visited[startRow][startCol] = true;
 
         for (currentRow = 0; currentRow < 20; currentRow++)
